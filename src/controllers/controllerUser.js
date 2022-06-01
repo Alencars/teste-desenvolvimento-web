@@ -49,7 +49,7 @@ exports.findOneUser = async (req, res) => {
         const user = await User.findOne({ _id: id })
 
         if (!user) {
-            res.status(422).json({ message: 'O nome é obrigatório' })
+            res.status(422).json({ message: 'O nome não encontrado' })
             return
         }
 
