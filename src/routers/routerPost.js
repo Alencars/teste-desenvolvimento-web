@@ -5,4 +5,5 @@ const controllerPost = require('../controllers/controllerPost')
 router  
     .post('/', controllerPost.createPost)
     .get('/', controllerPost.findManyPosts)
+    .get('/:id', controllerPost.findOnePost)
 module.exports = router
