@@ -4,5 +4,5 @@ const controllerPost = require('../controllers/controllerPost')
 
 router  
     .post('/', controllerPost.createPost)
-
+    .get('/', controllerPost.findManyPosts)
 module.exports = router
