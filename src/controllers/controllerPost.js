@@ -57,3 +57,29 @@ exports.findOnePost = async (req, res) => {
         res.status(500).json({ error: error})
     }
 }
+
+exports.updatedPost = async (req, res) => {
+    const id = req.params.id
+
+    const { title, description, img_url, timestamps, author } = req.body
+
+    const post = {
+        title,
+        description, 
+        img_url, 
+        timestamps, 
+        author
+    }
+
+    try {
+        const updatedPost = await Post.updateOne({ _id: id}, post)
+
+        if (updatedPost.matchedCount == 0) {
+            res.status(422).json({ message: 'Post não encontrado'})
+            return
+        }
+        res.status(200).json(post)
+    } catch (error) {
+        res.status(500).json({ error: error })
+    }
+}

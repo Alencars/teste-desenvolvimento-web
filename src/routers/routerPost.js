@@ -6,4 +6,5 @@ router
     .post('/', controllerPost.createPost)
     .get('/', controllerPost.findManyPosts)
     .get('/:id', controllerPost.findOnePost)
+    .patch('/:id', controllerPost.updatedPost)
 module.exports = router
