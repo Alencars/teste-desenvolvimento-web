@@ -1,7 +1,7 @@
 const Post = require('../models/modelPost')
 
 exports.createPost = async (req, res) => {
-    const { title, description, img_url, author } = req.body
+    const { title, description, img_url, timestamps, author } = req.body
 
     if (!title) {
         res.status(422).json({ error: 'O título é obrigatório!' })
