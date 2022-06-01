@@ -83,3 +83,21 @@ exports.updatedPost = async (req, res) => {
         res.status(500).json({ error: error })
     }
 }
+
+exports.deletePost = async (req, res) => {
+    const id = req.params.id
+
+    const post = await Post.findOne({_id: id})
+
+    if(!post) {
+        res.status(422).json({ message: 'Post não encontrado'})
+        return
+    }
+
+    try {
+        await Post.deleteOne({_id: id})
+        res.status(200).json({ message: 'Post removido com sucesso'})
+    } catch (error) {
+        res.status(500).json({ error: error})
+    }
+}

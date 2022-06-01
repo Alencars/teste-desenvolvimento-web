@@ -7,4 +7,5 @@ router
     .get('/', controllerPost.findManyPosts)
     .get('/:id', controllerPost.findOnePost)
     .patch('/:id', controllerPost.updatedPost)
+    .delete('/:id', controllerPost.deletePost)
 module.exports = router
