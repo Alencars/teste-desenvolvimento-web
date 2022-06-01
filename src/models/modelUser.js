@@ -12,7 +12,7 @@ const User = mongoose.model('User', {
     password: {
         type: String,
         require: true,
-    }
+    },
 })
 
 module.exports = User

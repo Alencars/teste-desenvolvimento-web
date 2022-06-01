@@ -1,4 +1,4 @@
-const exp = require('constants')
+const express = require('express')
 const User = require('../models/modelUser')
 
 exports.createUser = async (req, res) => {
@@ -9,18 +9,18 @@ exports.createUser = async (req, res) => {
         return
     }
     if (!email) {
-        res.status(422).json({ error: 'O nome é obrigatório!' })
+        res.status(422).json({ error: 'O email é obrigatório!' })
         return
     }
     if (!password) {
-        res.status(422).json({ error: 'O nome é obrigatório!' })
+        res.status(422).json({ error: 'A senha é obrigatória!' })
         return
     }
 
     const user = {
         name,
         email,
-        senha
+        password
     }
 
     try {
@@ -37,7 +37,7 @@ exports.findManyUser = async (req, res) => {
         const users = await User.find()
 
         res.status(200).json(users)
-    } catch {
+    } catch (error) {
         res.status(500).json({ error: error })
     }
 }
@@ -78,7 +78,7 @@ exports.updateUser =  async (req, res) => {
             res.status(422).json({ message: 'Usuário não encontrado' })
             return
         }
-        res.status(200).json(client)
+        res.status(200).json(user)
     } catch (error) {
         res.status(500).json({ error: error })
     }
@@ -90,7 +90,7 @@ exports.deleteUser = async (req, res) => {
     
     const user = await User.findOne({_id: id})
 
-    if(!client) {
+    if(!user) {
         res.status(422).json({ message: 'Usuário não encontrado'})
         return
     }

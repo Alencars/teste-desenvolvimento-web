@@ -1,28 +1,27 @@
-const express = require('express')
-const mongoose = require('mongoose')
-const routerUser = require('./src/routes/routesUser')
+const express = require("express")
+const mongoose = require("mongoose")
+const routesUser = require('./src/routes/routesUser')
+const app = express()
 
 require("dotenv").config()
 
-const app = express()
-
 app.use(
     express.urlencoded({
-        extended: true,
+        extended: false,
     }),
 )
 
 app.use(express.json())
-app.use('/user', routerUser)
+app.use('/user', routesUser)
 
 app.get("/", (req, res) => {
-
     res.json({ message: 'Oi express!'})
-
 })
+
 
 const DB_USER = process.env.DB_USER
 const DB_PASSWORD = process.env.DB_PASSWORD
+const PORT = process.env.PORT;
 
 mongoose
     .connect(
@@ -30,6 +29,6 @@ mongoose
     )
     .then(() =>{
         console.log('Conectamos ao MongoDB!')
-        app.listen(process.env.PORT || 3000)
+        app.listen(3000)
     })
     .catch((err) => console.log(err))
