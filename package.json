@@ -4,7 +4,9 @@
   "description": "<h3 align=\"center\">\r   <img alt=\"Digital One\" src=\"https://digitalone.com.br/images/agencia-de-marketing-digital-one.png\" />\r </h3>",
   "main": "server.js",
   "dependencies": {
+    "dotenv": "^16.0.1",
     "express": "^4.18.1",
+    "mongoose": "^6.3.5",
     "nodemon": "^2.0.16"
   },
   "scripts": {
