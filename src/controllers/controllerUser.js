@@ -1,7 +1,8 @@
 const express = require('express')
 const User = require('../models/modelUser')
 const bcrypt = require('bcrypt')
-
+const nodemailer = require('nodemailer')
+const crypto = require('crypto')
 
 exports.createUser = async (req, res) => {
     const { name, email, password } = req.body
@@ -112,5 +113,50 @@ exports.deleteUser = async (req, res) => {
         res.status(200).json({ message: 'Usuário removido com sucesso'})
     } catch (error) {
         res.status(500).json({ error: error})
+    }
+}
+
+exports.forgotPassword = async (req, res) => {
+    const { email } = request.body
+
+    try {
+        
+        const user = await User.findOne({ email: email })
+
+        if (!user) {
+            return res.status(422).json({ message: "Usuário não encontrado!"})
+        }
+        
+        const newPassword = crypto.randomBytes(4).toString('HEX')
+
+        const now = new Date()
+        now.setHours(now.getHours() + 1)
+
+        await User.findByIdAndUpdate(user.id, {
+            '$set': {
+                passwordResetToken: Token,
+                passwordResetExpires: now,
+            }
+        })
+
+        const transporter = nodemailer.createTransport({
+            host: "smtp.mailtrap.io",
+            port: 2525,
+            auth: {
+                user: env.process.AUTH_USER,
+                pass: env.process.AUTH_PASSWORD
+            }
+        })
+
+
+        transporter.sendMail({
+            from: 'Administrador <4bad6630a7-512170+1@inbox.mailtrap.io>',
+            to: email,
+            subject: 'Recuperação de senha!',
+            html: `<p>Olá, sua nova senha para acessar o sistema é: ${newPassword}</p><br/><a href="http://localhost:3000/login">Sistema</a>`
+        })
+
+    } catch (error) {
+        return res.status(404).json({ message: "Usuário não encontrado"})
     }
 }
