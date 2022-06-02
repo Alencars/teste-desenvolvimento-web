@@ -12,10 +12,9 @@ const Post = mongoose.model('Post', {
     img_url: {
         type: String,
     },
-    date: {
+    createdAt: {
         type: Date,
         default: Date.now,
-        timestamps: true,
     },
     author: {
         type: mongoose.Schema.Types.ObjectId,
