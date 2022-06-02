@@ -33,7 +33,7 @@ exports.formLogin = async (req, res) => {
             {
                 id: user._id,
             },
-            secret,
+            secret
         )
 
         res.status(200).json({message: "Login realizado com sucesso", token})
