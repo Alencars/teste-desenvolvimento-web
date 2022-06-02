@@ -19,7 +19,14 @@ exports.createUser = async (req, res) => {
         return
     }
 
-    const hashedPassword = await bcrypt.hash(req.body.password, 10)
+    const userExists = await User.findOne({ email: email})
+
+    if (userExists) {
+        return res.status(422).json({ message: "Email já cadastrado"})
+    }
+
+    const salt = await bcrypt.genSalt(10);
+    const hashedPassword = await bcrypt.hash(password, salt)
 
     const user = {
         name,
