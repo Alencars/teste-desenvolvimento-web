@@ -36,7 +36,7 @@ exports.formLogin = async (req, res) => {
             secret,
         )
 
-        res.status(200).json({ message: "login realizado com sucesso"}, token)
+        res.status(200).json({message: "Login realizado com sucesso", token})
 
     } catch (error) {
         res.status(500).json({ message: error})
