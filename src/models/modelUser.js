@@ -15,6 +15,14 @@ const User = mongoose.model('User', {
         type: String,
         require: true,
     },
+    passwordResetToken: {
+        type: String,
+        select: false,
+    },
+    passwordResetExpires: {
+        type: Date,
+        select: false,
+    }
 })
 
 module.exports = User
