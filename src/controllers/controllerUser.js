@@ -140,16 +140,16 @@ exports.forgotPassword = async (req, res) => {
        
         const token = crypto.randomBytes(20).toString('HEX')
 
-        //const now = new Date()
-       // now.setHours(now.getHours() + 1)
+        const now = new Date()
+        now.setHours(now.getHours() + 1)
 
-        /*await User.findByIdAndUpdate(userFind.id, {
+        await User.findByIdAndUpdate(userFind.id, {
             '$set': {
-                passwordResetToken: Token,
+                passwordResetToken: token,
                 passwordResetExpires: now,
             }
         })
-        */
+        
         transporter.sendMail({
             from: user,
             to: email,
