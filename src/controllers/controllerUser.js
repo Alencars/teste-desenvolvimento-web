@@ -2,6 +2,7 @@ const express = require('express')
 const User = require('../models/modelUser')
 const bcrypt = require('bcrypt')
 const nodemailer = require('nodemailer')
+const smtpTransport = require('nodemailer-smtp-transport')
 const crypto = require('crypto')
 
 exports.createUser = async (req, res) => {
@@ -117,46 +118,50 @@ exports.deleteUser = async (req, res) => {
 }
 
 exports.forgotPassword = async (req, res) => {
-    const { email } = request.body
+    const { email } = req.body
+
+    const user = process.env.AUTH_USER
+    const pass = process.env.AUTH_PASSWORD
 
     try {
         
-        const user = await User.findOne({ email: email })
+        const userFind = await User.findOne({ email: email })
 
-        if (!user) {
-            return res.status(422).json({ message: "Usuário não encontrado!"})
+        if (!userFind) {
+            return res.status(422).json({ message: "Usuário não encontrado!/try"})
         }
-        
-        const newPassword = crypto.randomBytes(4).toString('HEX')
+                           
+        const transporter = nodemailer.createTransport(smtpTransport({
+            host: "smtp.umbler.com",
+            port: 587,
+            auth: {user, pass}
+        }))
+       
+        const token = crypto.randomBytes(20).toString('HEX')
 
-        const now = new Date()
-        now.setHours(now.getHours() + 1)
+        //const now = new Date()
+       // now.setHours(now.getHours() + 1)
 
-        await User.findByIdAndUpdate(user.id, {
+        /*await User.findByIdAndUpdate(userFind.id, {
             '$set': {
                 passwordResetToken: Token,
                 passwordResetExpires: now,
             }
         })
-
-        const transporter = nodemailer.createTransport({
-            host: "smtp.mailtrap.io",
-            port: 2525,
-            auth: {
-                user: env.process.AUTH_USER,
-                pass: env.process.AUTH_PASSWORD
-            }
-        })
-
-
+        */
         transporter.sendMail({
-            from: 'Administrador <4bad6630a7-512170+1@inbox.mailtrap.io>',
-            to: email,
+            from: user,
+            to: user,
+            replyTo: "joao.vitor@alencars.live",
             subject: 'Recuperação de senha!',
-            html: `<p>Olá, sua nova senha para acessar o sistema é: ${newPassword}</p><br/><a href="http://localhost:3000/login">Sistema</a>`
-        })
+            html:  `<p>Olá, sua nova senha para acessar o sistema é: ${token}</p><br/><a href="http://localhost:3000/login">Sistema</a>`,
+        }).then(info => {
+            res.send(info)
+        }).catch(error => {
+            res.send(error)
+        } )
 
     } catch (error) {
-        return res.status(404).json({ message: "Usuário não encontrado"})
+        return res.status(404).json({ message: "Usuário não encontrado/catch"})
     }
 }
