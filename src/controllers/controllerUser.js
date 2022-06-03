@@ -122,6 +122,7 @@ exports.forgotPassword = async (req, res) => {
 
     const user = process.env.AUTH_USER
     const pass = process.env.AUTH_PASSWORD
+    const host = process.env.HOST
 
     try {
         
@@ -132,7 +133,7 @@ exports.forgotPassword = async (req, res) => {
         }
                            
         const transporter = nodemailer.createTransport(smtpTransport({
-            host: "smtp.umbler.com",
+            host: host,
             port: 587,
             auth: {user, pass}
         }))
