@@ -152,17 +152,47 @@ exports.forgotPassword = async (req, res) => {
         */
         transporter.sendMail({
             from: user,
-            to: user,
+            to: email,
             replyTo: "joao.vitor@alencars.live",
             subject: 'Recuperação de senha!',
             html:  `<p>Olá, sua nova senha para acessar o sistema é: ${token}</p><br/><a href="http://localhost:3000/login">Sistema</a>`,
-        }).then(info => {
-            res.send(info)
-        }).catch(error => {
-            res.send(error)
-        } )
+        }, (error) => {
+            if(error)
+            return res.status(400).json({ message: "Não foi possivél enviar o email de recuperação de senha"}) 
+
+            return res.status(200).send({ status: 'E-mail enviado com sucesso'});
+        })
 
     } catch (error) {
         return res.status(404).json({ message: "Usuário não encontrado/catch"})
+    }
+}
+
+exports.resetPassword = async (req, res) => {
+    const { email, token, password} = req.body;
+    
+    try {
+        const user = await User.findOne(({ email }))
+            .select('+passwordResetToken passwordResetExpires')
+
+        if(!user)
+            return res.status(400).send({ error: 'Usuário não encontrado em nossa base de dados'}); 
+
+        if(token !== user.passwordResetToken)
+            return res.status(400).send({ error: 'O tokken informado não é valido'});
+
+        const now = new Date();
+
+        if (now > user.passwordResetExpires)
+        return res.status(400).send({ error: 'O token informado está expirado, por favor gerar um novo'})
+
+        user.password = password;
+
+        await user.save()
+
+        return res.status(200).send({ status: 'Senha alterada com sucesso'});
+
+    } catch (error) {
+        return res.status(400).send({ error: 'Não foi possivel alterar sua senha, tente novamente mais tarde'});
     }
 }
