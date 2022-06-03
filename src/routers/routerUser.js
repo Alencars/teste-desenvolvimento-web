@@ -5,6 +5,7 @@ const controllerUser = require('../controllers/controllerUser')
 router
     .post('/', controllerUser.createUser)
     .post('/forgot_password', controllerUser.forgotPassword)
+    .post('/reset_password', controllerUser.resetPassword)
     .get('/', controllerUser.findManyUser)
     .get('/:id', controllerUser.findOneUser)
     .patch('/:id', controllerUser.updateUser)
