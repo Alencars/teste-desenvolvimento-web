@@ -1,8 +1,11 @@
 const express = require("express")
+const cors = require("cors")
+const router = express.Router()
 const mongoose = require("mongoose")
 const routerUser = require('./src/routers/routerUser')
 const routerPost = require('./src/routers/routerPost')
 const routerLogin = require('./src/routers/routerLogin')
+const checkToken = require("./src/middlewares/checkToken")
 const app = express()
 
 require("dotenv").config()
@@ -14,9 +17,11 @@ app.use(
 )
 
 app.use(express.json())
+app.use(cors())
 app.use('/user', routerUser)
-app.use('/post', routerPost)
+app.use('/post', checkToken, routerPost)
 app.use('/login', routerLogin)
+
 
 app.get("/", (req, res) => {
     res.json({ message: 'Oi express!'})
@@ -36,3 +41,4 @@ mongoose
         app.listen(3000)
     })
     .catch((err) => console.log(err))
+
