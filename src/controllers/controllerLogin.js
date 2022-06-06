@@ -6,6 +6,8 @@ require('dotenv').config()
 exports.formLogin = async (req, res) => {
     const {email, password} = req.body
 
+    console.log(req.body)
+
     if (!email) {
         return res.status(422).json({ message: "O email é obrigatório!"})
     }
@@ -13,6 +15,7 @@ exports.formLogin = async (req, res) => {
     if (!password) {
         return res.status(422).json({ message: "A senha é obrigatória"})
     }
+
 
     const user = await User.findOne({ email: email })
 
